@@ -1,29 +1,25 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development', 
-    entry: './frontend/assets/js/main.js',
-    output: {
-        path: path.resolve(__dirname,'dist', 'assets', 'js'),
-        filename: 'bundle.js'
-    },
-    module: {
-        rules: [
-            {
-                exclude: /node_modules/,
-                test: /\.js$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/env']
-                    }
-                }
-            },
-            {
-                test: /\.css$/,
-                use: [ 'style-loader', 'css-loader']
-            }
-        ]
-    },
-    devtool: 'source-map'
+  mode: 'production',
+  entry: './frontend/js/main.js',
+  output: {
+    path: path.resolve(__dirname, 'dist', 'js'),
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        exclude: /node_modules/,
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/env']
+          }
+        }
+      }
+    ]
+  },
+  devtool: 'source-map'
 }

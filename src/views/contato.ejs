@@ -1,45 +1,54 @@
 <%- include('includes/head') %>
-<%- include('includes/navbar') %>
+  <%- include('includes/navbar') %>
 
-<div class="container">
-    <div class="row">
+    <div class="container">
+      <div class="row">
         <div class="col-lg-2"></div>
         <div class="col-lg-8">
-            <h1 class="display-1 text-center ">contato</h1>
-            <p class="text-center lead">contatos</p>
+          <h1 class="display-1 text-center ">contato</h1>
+          <p class="text-center lead">contatos</p>
         </div>
         <%- include('includes/messages') %>
-        
-        <div class="row">
+
+          <div class="row">
             <div class="col-lg-8 mx-auto">
-                <% if(contato._id) { %>
-                    <form class="form-control" action="/contato/edit/<%= contato._id %>" method="post">
-                <% } else { %>
-                    <form class="form-control" action="/contato" method="POST">
-                <% } %>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="form-group">
-                        <label for="nome">Nome</label>
-                        <input value="<%= contato.nome %>" class="form-control mb-3" name="nome">
-                    </div>
-                    <div class="form-group">
-                        <label for="sobrenome">Sobrenome</label>
-                        <input value="<%= contato.sobrenome %>" type="text" class="form-control mb-3" name="sobrenome">
-                    </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone</label>
-                        <input value="<%= contato.telefone %>" class="form-control mb-3" name="telefone">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input value="<%= contato.email %>" class="form-control mb-3" name="email">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Criar minha conta</button>
-                </form>
+              <% if(contato._id) { %>
+                <form class="form-control form-atualizacao-contato" action="/contato/edit/<%= contato._id %>" method="post">
+                  <% } else { %>
+                    <form class="form-control form-cadastro-contato" action="/contato" method="POST">
+                      <% } %>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="form-group">
+                          <label for="nome">Nome</label>
+                          <input value="<%= contato.nome %>" class="form-control" name="nome">
+                        </div>
+                        <div class="form-group">
+                          <label for="sobrenome" class="mt-3">Sobrenome</label>
+                          <input value="<%= contato.sobrenome %>" type="text" class="form-control"
+                            name="sobrenome">
+                        </div>
+                        <div class="form-group">
+                          <label for="telefone" class="mt-3">Telefone</label>
+                          <input value="<%= contato.telefone %>" class="form-control" name="telefone">
+                        </div>
+                        <div class="form-group">
+                          <label for="email" class="mt-3">E-mail</label>
+                          <input value="<%= contato.email %>" class="form-control" name="email">
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                          <% if(contato._id) { %>
+                            <button type="submit" class="btn btn-primary">Alterar contato</button>
+                            <a href="/contato" class="btn btn-primary ml-end">Cadastrar contato</a>
+                            <% } else { %>
+                              <button type="submit" class="btn btn-primary">Cadastrar contato</button>
+                              <% } %>
+                        </div>
+
+                    </form>
             </div>
-        </div>
+          </div>
+      </div>
     </div>
-</div>
 
 
-<%- include('includes/footer') %>
+    <%- include('includes/footer') %>
