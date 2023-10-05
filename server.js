@@ -1,33 +1,40 @@
-require('dotenv').config(); //refere-se ao arquivo (.env) de senha pessoal para acesso ao db (deve estar no .gitignore)
+require('dotenv').config()
 
-const express = require('express');
-const app = express();
-const mongoose = require('mongoose'); // modelação de tabelas do mongodb
-const { checkCsrfError, csrfMiddleware, middlewareGlobal } = require('./src/middlewares/middleware') // middlewares são funções executadas na rota
+const express = require('express')
+const app = express()
+const mongoose = require('mongoose')
+const {
+  checkCsrfError,
+  csrfMiddleware,
+  middlewareGlobal
+} = require('./src/middlewares/middleware')
 
-
-mongoose.connect(process.env.CONNECTIONSTRING, { useNewUrlParser: true, useUnifiedTopology: true }) // iniciar a conexao
+mongoose
+  .connect(process.env.CONNECTIONSTRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => {
-    console.log('conectei a base de dados')
-    app.emit('pronto') //emite um sinal para o conteudo ser iniciado apenas depois da conexao
-  });
+    app.emit('pronto')
+  })
+  .catch(err => {
+    console.log('erro aqui', err)
+  })
 
-const session = require('express-session'); // identifica o navegador de um cliente e salva um cookie
-const MongoStore = require('connect-mongo');// faz com que os cookies sejam salvos na db pois por padrao sao salvos na memoria sendo assim evita o consumo rapido de memoria
-const flash = require('connect-flash');/* mensagens autodestrutivas apos serem impressas iram sumir, perfeito para msgs de erros ou algum feedback para o usuario
-elas são salvas na sessão por isso as seções devem ser configuradas primeiro*/
-const path = require('path'); // trabalha com caminhos dos documentos
-const routes = require('./routes');
-const helmet = require('helmet');// segurança da aplicação (leia a documentação)
-const csrf = require('csurf');// tokens para impedir que qualquer invasor envie informações erradas em nosso site
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+const flash = require('connect-flash')
+const path = require('path')
+const routes = require('./routes')
+const helmet = require('helmet')
+const csrf = require('csurf')
 
-// app.use(helmet());
-app.use(express.urlencoded({ extends: true })); // assim podemos postar formularios para dentro da aplicação
-app.use(express.json()); //fazer o parc de JSON
-app.use('/js', express.static(path.join(__dirname, 'dist', 'js'))) //;cria a rota "js" para servir os arquivos estaticos
-app.use(express.static(path.resolve(__dirname, 'dist', 'js'))); // poder acessar diretamente os arquivos estaticos ex: css, img
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use('/js', express.static(path.join(__dirname, 'dist', 'js')))
+app.use(express.static(path.resolve(__dirname, 'dist', 'js')))
 
-const sessionOpitions = session({ // configuração de sessão
+const sessionOpitions = session({
   secret: 'ntfgbhnjgbnbnedgbhaeugbhnhng',
   store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }),
   resave: false,
@@ -38,25 +45,20 @@ const sessionOpitions = session({ // configuração de sessão
   }
 })
 
-app.use(sessionOpitions);
-app.use(flash());
+app.use(sessionOpitions)
+app.use(flash())
 
-app.set('views', path.resolve(__dirname, 'src', 'views')); //são os arquivos reinderizados na tela
-app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, 'src', 'views'))
+app.set('view engine', 'ejs')
 
-app.use(csrf());// token
+app.use(csrf())
 
-//middleware globais 
-app.use(checkCsrfError);
-app.use(csrfMiddleware);
-app.use(middlewareGlobal);
+app.use(checkCsrfError)
+app.use(csrfMiddleware)
+app.use(middlewareGlobal)
 
+app.use(routes)
 
-app.use(routes);
-
-
-app.on('pronto', () => { // função esperando o retorno do "emit()"
-  app.listen(3012, () => {
-    console.log('Acessar http://localhost:3012')
-  });
+app.on('pronto', () => {
+  app.listen(3012, () => {})
 })
